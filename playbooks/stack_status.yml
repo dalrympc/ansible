@@ -43,6 +43,19 @@
       when: "'Hello, from sunny' not in item.content"
       with_items: "{{ lb_index.results }}"
 
+    - name: Verify End-to-End DB Response
+      uri:
+        url: http://{{item}}/db
+        return_content: yes
+      with_items: "{{ groups['loadbalancer'] }}"
+      register: lb_db_index
+
+
+    - fail:
+        msg: Index Failed to Return Content
+      when: "'Database Connected from' not in item.content"
+      with_items: "{{ lb_db_index.results }}"
+
 - hosts: loadbalancer
   tasks:
     - name: Verify Backend Response
@@ -56,3 +69,16 @@
     - fail: msg="Index Failed to Return Content"
       when: "'Hello, from sunny {{item.item}}!' not in item.content"
       with_items: "{{app_index.results}}"
+
+    - name: Verify Backend DB Response
+      uri:
+        url: http://{{item}}/db
+        return_content: yes
+      with_items: "{{ groups['webservers'] }}"
+      register: app_db_index
+
+
+    - fail: msg="Index Failed to Return Content"
+      when: "'Database Connected from {{item.item}}!' not in item.content"
+      with_items: "{{app_db_index.results}}"
+
