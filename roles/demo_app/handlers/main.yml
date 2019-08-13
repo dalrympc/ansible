@@ -1,2 +1,3 @@
 ---
-# handlers file for demo_app
+- name: Restart Apache2
+  service: name=apache2 state=restarted

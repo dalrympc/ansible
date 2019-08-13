@@ -1,2 +1,25 @@
 ---
-# tasks file for apache2
+- name: Update Hosts File
+  synchronize: src=/etc/hosts dest=/etc/hosts
+
+- name: Install Webserver Components 
+  apt: 
+    name: "{{ packages }}"
+    state: present 
+    update_cache: yes
+  vars:
+    packages:
+      - apache2
+      - libapache2-mod-wsgi
+   
+
+- name: Ensure mod_wsgi is enabled
+  apache2_module: state=present name=wsgi
+  notify: Restart Apache2
+
+- name: De-Activate Default Apache Site
+  file: path=/etc/apache2/sites-enabled/000-default.conf state=absent
+  notify: Restart Apache2
+
+- name: Ensure Apache2 is started
+  service: name=apache2 state=started enabled=yes  
