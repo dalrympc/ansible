@@ -16,9 +16,9 @@
   apt: name=mysql-server state=present update_cache=yes
 
 
-- name: Ensure that MySQL is listening on all ports
+- name: Ensure that MySQL is listening on eth0
   lineinfile: dest=/etc/mysql/my.cnf regexp=^bind-address
-              line="bind-address = 0.0.0.0"
+              line="bind-address = {{ ansible_eth1.ipv4.address }}"
   notify: Restart MySQL
 
 - name: Ensure MySQL Server is started
