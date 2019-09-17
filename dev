@@ -1,14 +1,14 @@
 # This is an inventory for Ansible
 
 [loadbalancer]
-ubuntu2-lb
+lb
 
 [webservers]
-ubuntu3-app1
-ubuntu4-app2
+app1
+app2
 
 [database]
-ubuntu5-db
+db
 
 [control]
-ansiblecontrol ansible_connection=local
+ansiblecontrol 
